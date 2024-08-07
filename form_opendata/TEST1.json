@@ -1,0 +1,24 @@
+{
+    "uuid": "7d567faa-4fb0-447b-8e02-5cd9bb67d8f4",
+    "authors": [
+        "daniel",
+        "Simon",
+        "Richard"
+    ],
+    "projectName": "TEST1",
+    "Description": "text, text and more text",
+    "license": {
+        "so:name": "toronto",
+        "so:url": "https://www.nature.com/articles/461168a#Sec2"
+    },
+    "project_codes": [
+        "scdsf",
+        "BCD2X",
+        "BXDD4"
+    ],
+    "so:url": "https://opendata.earlham.ac.uk/wheat/under_license/toronto/TEST1/",
+    "irods_path": "/grassrootsZone/public/under_license/toronto/TEST1",
+    "@type": "Grassroots:Project",
+    "type_description": "Dataset",
+    "so:image": "https://grassroots.tools/grassroots/images/aiss/drawer"
+}
