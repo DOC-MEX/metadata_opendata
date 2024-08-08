@@ -1,6 +1,6 @@
-/*body {*/
-/*min-height: 2000px;*/
-/*}*/
+body {
+padding-top: 110px;
+}
 
 /*.navbar-static-top {*/
 /*margin-bottom: 19px;*/
@@ -58,7 +58,7 @@ a, a.active, a:active, a:focus, a:hover {
     background-color: rgba(246, 40, 23, 0.7);
 }
 
-. in_box {
+.in_box {
     padding-left: 10px;
     padding-right: 10px;
 }
