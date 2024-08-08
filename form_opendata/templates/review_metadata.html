@@ -1,11 +1,12 @@
-<!DOCTYPE html>
-<html>
-<head>
-    <title>Review Metadata</title>
-</head>
-<body>
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Review Metadata{% endblock %}
+
+{% block content %}
+<div class="container mt-5">
     <h1>Review Metadata</h1>
-    <table>
+    <table class="table table-striped mt-4">
         <tr>
             <th>Authors</th>
             <td>{{ metadata.authors|join:", " }}</td>
@@ -25,7 +26,8 @@
     </table>
     <form method="post" action="{% url 'submit_metadata' %}">
         {% csrf_token %}
-        <button type="submit">Submit Metadata</button>
+        <button type="submit" class="btn btn-primary">Submit Metadata</button>
     </form>
-</body>
-</html>
+</div>
+{% endblock %}
+

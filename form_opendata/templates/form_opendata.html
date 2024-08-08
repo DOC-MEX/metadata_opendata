@@ -9,14 +9,60 @@
         body {
             padding-top: 110px;
         }
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+        .form-label {
+            margin-bottom: .5rem;
+        }
+        .form-control.is-invalid {
+            border-color: #dc3545;
+        }
+        .invalid-feedback {
+            display: block;
+        }
+        .submit-button {
+            margin-bottom: 2rem; /* Add space below the submit button */
+        }
     </style>
 {% endblock %}
 
 {% block content %}
-<h2>Capture Metadata</h2>
-<form method="post">
-    {% csrf_token %}
-    {{ form.as_p }}
-    <button type="submit">Submit</button>
-</form>
+<div class="container mt-5">
+    <h1>Capture Metadata</h1>
+    <form method="post" class="mt-4">
+        {% csrf_token %}
+        <div class="form-group">
+            <label for="id_project_name" class="form-label">Project Name</label>
+            <input type="text" name="project_name" id="id_project_name" class="form-control{% if form.project_name.errors %} is-invalid{% endif %}" value="{{ form.project_name.value|default_if_none:'' }}">
+            {% for error in form.project_name.errors %}
+                <div class="invalid-feedback">{{ error }}</div>
+            {% endfor %}
+        </div>
+        <div class="form-group">
+            <label for="id_authors" class="form-label">Authors</label>
+            <textarea name="authors" id="id_authors" class="form-control{% if form.authors.errors %} is-invalid{% endif %}" rows="3">{{ form.authors.value|default_if_none:'' }}</textarea>
+            <small class="form-text text-muted">Enter authors separated by commas</small>
+            {% for error in form.authors.errors %}
+                <div class="invalid-feedback">{{ error }}</div>
+            {% endfor %}
+        </div>
+        <div class="form-group">
+            <label for="id_description" class="form-label">Description</label>
+            <textarea name="description" id="id_description" class="form-control{% if form.description.errors %} is-invalid{% endif %}" rows="5">{{ form.description.value|default_if_none:'' }}</textarea>
+            {% for error in form.description.errors %}
+                <div class="invalid-feedback">{{ error }}</div>
+            {% endfor %}
+        </div>
+        <div class="form-group">
+            <label for="id_project_codes" class="form-label">Project Codes</label>
+            <textarea name="project_codes" id="id_project_codes" class="form-control{% if form.project_codes.errors %} is-invalid{% endif %}" rows="3">{{ form.project_codes.value|default_if_none:'' }}</textarea>
+            <small class="form-text text-muted">Enter project codes separated by commas</small>
+            {% for error in form.project_codes.errors %}
+                <div class="invalid-feedback">{{ error }}</div>
+            {% endfor %}
+        </div>
+        <button type="submit" class="btn btn-primary  submit-button">Submit</button>
+    </form>
+</div>
 {% endblock %}

@@ -123,6 +123,8 @@ STATICFILES_DIRS = [
     os.path.join(BASE_DIR, 'metadata/static')# location of css and js files for base.html
 ]
 
+STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles') # when in production use htdocs folder in apache
+
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.2/ref/settings/#default-auto-field
 
