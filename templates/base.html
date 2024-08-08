@@ -1,0 +1,123 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+    <meta name="description" content="" />
+    <meta name="author" content="" />
+
+    
+    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
+    <meta http-equiv="Pragma" content="no-cache" />
+    <meta http-equiv="Expires" content="0" />
+    <title>{% block title %}Grassroots{% endblock %}</title>
+    
+    
+    {% block all_styles_and_scripts %}
+    <!-- Core theme CSS freelancer (includes Bootstrap)-->
+    <link href="{% static 'fieldtrial/css/styles.css' %}" rel="stylesheet"> 
+    <!-- font awesome 5.9 to 5.15-->
+    <link href="{% static 'fieldtrial/SCRIPTS/fontawesome-free-5.15.4-web/css/all.css' %}" rel="stylesheet" type="text/css"/>
+    <!-- jQuery -->
+    <script type="text/javascript" src="{% static 'fieldtrial/SCRIPTS/jquery/jquery-3.7.1.min.js' %}"></script>
+    <script type="text/javascript" src="{% static 'fieldtrial/SCRIPTS/jquery/jquery-ui.min.js' %}"></script>
+    <!-- jQuery UI CSS -->
+    <link rel="stylesheet" href="{% static 'fieldtrial/SCRIPTS/jquery/jquery-ui.min.css' %}" type="text/css"/>
+
+    <!-- Datatables -->
+    <link rel="stylesheet" href="{% static 'fieldtrial/SCRIPTS/datatables/datatables.min.css' %}" type="text/css"/>
+    <script type="text/javascript" src="{% static 'fieldtrial/SCRIPTS/datatables/datatables.min.js' %}"></script>
+    <!-- **BOOTSTRAP 5.3.2** -->
+    <script src="{% static 'fieldtrial/SCRIPTS/bootstrap5.3.2/bootstrap.bundle.min.js' %}"></script>     
+    <!-- Core theme JS  freelancer -->
+    <script src="{% static 'fieldtrial/js/scripts.js' %}"></script> 
+    
+    
+    <!-- ***********Actually  Bootstrap v4.0.0-beta, remove it *********************************************
+    <link href="https://grassroots.tools/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+    -->
+    
+    <!-- grassroots grassroots.css (modified) or site.css (original) -->
+    <link rel="stylesheet" href="{% static 'fieldtrial/site.css' %}" type="text/css"/>
+    <!--<link href="https://grassroots.tools/css/site.css" rel="stylesheet">  -->
+    <link rel="stylesheet" href="{% static 'fieldtrial/overrides/style.css' %}" type="text/css"/>
+    
+    <!-- ********************************************************-->
+    <!-- ********************************************************-->
+    <!-- wis 
+    <script type="text/javascript" src="{% static 'scripts/gi_dynamic_web.js' %}?timestamp={% now "U" %}"></script>
+    <script type="text/javascript" src="{% static 'scripts/fieldtrial_map.js' %}?timestamp={% now "U" %}"></script>
+    <script type="text/javascript" src="{% static 'scripts/config.js' %}?timestamp={% now "U" %}"></script>
+    <script type="text/javascript" src="{% static 'scripts/wis.js' %}?timestamp={% now "U" %}"></script>
+    -->
+    <!-- ********************************************************-->
+    <!-- ********************************************************-->
+
+    <!-- Core theme CSS freelancer (includes Bootstrap)-->
+    <!-- jQuery -->    
+    <!-- Core theme JS  freelancer -->    
+    <!-- new style bit -->
+    <!-- font awesome 5.9 to 5.15-->
+    
+    <!-- ********************************************************-->
+    <!-- Leaflet NEWEST VERSION 
+    <link rel="stylesheet" href="{% static 'fieldtrial/SCRIPTS/leaflet/leaflet.css' %}"/>
+    <script src="{% static 'fieldtrial/SCRIPTS/leaflet/leaflet.js' %}"></script> 
+    -->
+
+    <!-- Leaflet markercluster NEWEST VERSION 
+    <link rel="stylesheet" href="{% static 'fieldtrial/SCRIPTS/leaflet.markercluster/MarkerCluster.css' %}"/>
+    <link rel="stylesheet" href="{% static 'fieldtrial/SCRIPTS/leaflet.markercluster/MarkerCluster.Default.css' %}"/>
+    <script src="{% static 'fieldtrial/SCRIPTS/leaflet.markercluster/leaflet.markercluster.js' %}"></script>
+    -->
+
+    <!-- 
+    <script type="text/javascript" src="{% static 'scripts/FileSaver.min.js' %}"></script>
+
+    
+    <script type="text/javascript" src="{% static 'scripts/js-xlsx/xlsx.full.min.js' %}"></script>
+
+    
+    <script type="text/javascript" src="{% static 'scripts/csvjson.min.js' %}"></script>
+
+
+    
+    <script type="text/javascript" src="{% static 'scripts/marker.js' %}"></script>
+    <script type="text/javascript" src="{% static 'scripts/biojs_io_fasta.min.js' %}"></script>
+    <script type="text/javascript" src="{% static 'scripts/msa.min.gz.js' %}"></script>
+    <script type="text/javascript" src="{% static 'scripts/jquery/js/jquery.csvToTable.js' %}"></script>
+    <link rel="stylesheet" href="{% static 'scripts/jquery/css/csvtable.css' %}" type="text/css"/>
+    <link rel="stylesheet" href="{% static 'styles/msa.min.gz.css' %}" type="text/css"/>
+   -->
+
+
+
+    <!--      ***************************************************              -->
+    <!--      ***************************************************              -->
+
+
+    {% endblock %}
+    
+</head>
+<body>
+    
+    {% include 'partials/_header.html' %}
+    
+    
+        {% block content %}{% endblock %}
+    
+    
+    {% include 'partials/_footer.html' %}
+
+
+    
+         
+    {% block additional_scripts %}{% endblock %}
+        
+</body>
+</html>
+
+
+

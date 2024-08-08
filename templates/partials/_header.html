@@ -1,0 +1,57 @@
+
+
+{% load static %}
+
+
+<nav class="navbar navbar-expand-lg bg-secondary text-uppercase fixed-top" id="mainNav">
+    <div class="container">
+        <a class="navbar-brand" href="/index.html" style="text-transform: none;">Grassroots Infrastructure</a>
+        <button class="navbar-toggler text-uppercase font-weight-bold bg-primary text-white rounded" type="button" data-bs-toggle="collapse" data-bs-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
+            Menu
+            <i class="fas fa-bars"></i>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarResponsive">
+            <ul class="navbar-nav ms-auto">
+                <li class="nav-item mx-0 mx-lg-1">
+                    <a class="nav-link py-3 px-0 px-lg-3 rounded" target="_blank" href="https://grassroots.tools/index.html">Services</a>
+                </li>
+                <li class="nav-item mx-0 mx-lg-1">
+                    <a class="nav-link py-3 px-0 px-lg-3 rounded" target="_blank" href="https://grassroots.tools/docs/">Docs</a>
+                </li>
+                <li class="nav-item mx-0 mx-lg-1">
+                    <a class="nav-link py-3 px-0 px-lg-3 rounded" target="_blank" href="https://grassroots.tools/#data">Data</a>
+                </li>
+                <li class="nav-item mx-0 mx-lg-1">
+                    <a class="nav-link py-3 px-0 px-lg-3 rounded" target="_blank" href="https://grassroots.tools/index.html#about">About</a>
+                </li>
+                <li class="nav-item mx-0 mx-lg-1">
+                    <a class="nav-link py-3 px-0 px-lg-3 rounded" target="_blank" href="https://grassroots.tools/dfw">DFW</a>
+                </li>
+                <li class="nav-item mx-0 mx-lg-1">
+                    <a class="nav-link py-3 px-0 px-lg-3 rounded" target="_blank" href="https://grassroots.tools/index.html#contact">Contact</a>
+                </li>
+            </ul>
+            <img class="navbar-nav navbar-right" style="height:50px;margin-left:50px;"
+                 src="{% static "/images/logo-white.png" %}"/>
+        </div>
+    </div>
+</nav>
+
+
+   <!--NEW STUFF
+   <script>
+    $(document).ready(function(){
+        $('[data-toggle="popover"]').popover( {trigger: 'focus', html:true});   
+    });
+    </script>
+-->
+ 
+ <!-- Global site tag (gtag.js) - Google Analytics -->
+ <script async src="https://www.googletagmanager.com/gtag/js?id=UA-21666189-16"></script>
+ <script>
+   window.dataLayer = window.dataLayer || [];
+   function gtag(){dataLayer.push(arguments);}
+   gtag('js', new Date());
+ 
+   gtag('config', 'UA-21666189-16');
+ </script>
