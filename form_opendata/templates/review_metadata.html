@@ -3,31 +3,53 @@
 
 {% block title %}Review Metadata{% endblock %}
 
+{% block all_styles_and_scripts %}
+    {{ block.super }}
+    <style>
+        body {
+            padding-top: 110px;
+        }
+
+        .submit-button {
+            margin-bottom: 2rem; /* Add space below the submit button */
+        }
+    </style>
+{% endblock %}
+
 {% block content %}
 <div class="container mt-5">
     <h1>Review Metadata</h1>
-    <table class="table table-striped mt-4">
-        <tr>
-            <th>Authors</th>
-            <td>{{ metadata.authors|join:", " }}</td>
-        </tr>
-        <tr>
-            <th>Project Name</th>
-            <td>{{ metadata.projectName }}</td>
-        </tr>
-        <tr>
-            <th>Description</th>
-            <td>{{ metadata.Description }}</td>
-        </tr>
-        <tr>
-            <th>Project Codes</th>
-            <td>{{ metadata.project_codes|join:", " }}</td>
-        </tr>
-    </table>
-    <form method="post" action="{% url 'submit_metadata' %}">
+    <form method="post" action="{% url 'review_metadata' %}">
         {% csrf_token %}
-        <button type="submit" class="btn btn-primary">Submit Metadata</button>
+        <table class="table table-striped mt-4">
+            <tr>
+                <th>Project Name</th>
+                <td>
+                    <input type="text" name="project_name" id="id_project_name" class="form-control" value="{{ form.project_name.value }}">
+                </td>
+            </tr>
+            <tr>
+                <th>Authors</th>
+                <td>
+                    <textarea name="authors" id="id_authors" class="form-control" rows="3">{{ form.authors.value }}</textarea>
+                    <small class="form-text text-muted">Enter authors separated by commas</small>
+                </td>
+            </tr>
+            <tr>
+                <th>Description</th>
+                <td>
+                    <textarea name="description" id="id_description" class="form-control" rows="5">{{ form.description.value }}</textarea>
+                </td>
+            </tr>
+            <tr>
+                <th>Project Codes</th>
+                <td>
+                    <textarea name="project_codes" id="id_project_codes" class="form-control" rows="3">{{ form.project_codes.value }}</textarea>
+                    <small class="form-text text-muted">Enter project codes separated by commas</small>
+                </td>
+            </tr>
+        </table>
+        <button type="submit" class="btn btn-primary submit-button">Update Metadata</button>
     </form>
 </div>
 {% endblock %}
-
