@@ -2,9 +2,10 @@ import os
 import json
 import uuid
 from django.shortcuts import render, redirect
-from django.http import HttpResponse
 from .forms import MetadataForm
 from django.conf import settings
+from django.http import JsonResponse, Http404
+from django.urls import reverse
 
 # Create your views here.
 #def form_opendata(request):
@@ -61,14 +62,18 @@ def review_metadata(request):
             # Clean and strip whitespace, and filter out empty items
             cleaned_authors = [author.strip() for author in form.cleaned_data['authors'].split(',') if author.strip()]
             cleaned_project_codes = [code.strip() for code in form.cleaned_data['project_codes'].split(',') if code.strip()]
+            cleaned_description = form.cleaned_data['description'].replace('\r\n', ' ').replace('\n', ' ').strip()
 
-            # Update the session with the cleaned data
-            request.session['metadata'] = {
+            # Update the session with the cleaned data, keeping the original structure intact
+            metadata.update({
                 'projectName': form.cleaned_data['project_name'],
                 'authors': cleaned_authors,
-                'Description': form.cleaned_data['description'],
+                'Description': cleaned_description,
                 'project_codes': cleaned_project_codes,
-            }
+            })
+
+            # Save the updated metadata back to the session
+            request.session['metadata'] = metadata
             return redirect('submit_metadata')
     else:
         # Prepopulate the form with current metadata
@@ -84,29 +89,52 @@ def review_metadata(request):
 
 
 def submit_metadata(request):
-    # Retrieve metadata from session
     metadata = request.session.get('metadata')
     if not metadata:
         return redirect('form_opendata')
 
-    # Clean up any remaining whitespace in the session data
     metadata['authors'] = [author.strip() for author in metadata['authors']]
     metadata['project_codes'] = [code.strip() for code in metadata['project_codes']]
-    
-    # Extract project name from the metadata
+    metadata['Description'] = metadata['Description'].replace('\r\n', ' ').replace('\n', ' ').strip()
+
     project_name = metadata['projectName']
+    sanitized_project_name = project_name.replace(' ', '_')
 
-    # Define the path to save the JSON file
-    json_path = os.path.join(settings.BASE_DIR, 'form_opendata', f'{project_name}.json')
-
-    # Write the metadata to the JSON file
+    json_path = os.path.join(settings.BASE_DIR, 'form_opendata', f'{sanitized_project_name}.json')
     with open(json_path, 'w') as json_file:
         json.dump(metadata, json_file, indent=4)
 
-    # Optionally clear the session data after saving
     del request.session['metadata']
 
-    # Return a simple success response
-    return HttpResponse("Metadata captured and processed successfully!")
+    json_url = os.path.join('/form_opendata', f'{sanitized_project_name}.json')
+    view_json_url = reverse('view_json', args=[sanitized_project_name])
+
+    return render(request, 'submitted.html', {'json_url': json_url, 'view_json_url': view_json_url})
+
+def view_json(request, filename):
+    # Construct the path to the JSON file
+    json_path = os.path.join(settings.BASE_DIR, 'form_opendata', f'{filename}.json')
+    
+    # Check if the file exists
+    if not os.path.exists(json_path):
+        raise Http404("JSON file not found")
+
+    # Generate the URL to fetch the JSON using serve_json_file
+    json_url = reverse('serve_json_file', args=[filename])
+    
+    return render(request, 'view_json.html', {'json_url': json_url})
 
 
+def serve_json_file(request, filename):
+    json_path = os.path.join(settings.BASE_DIR, 'form_opendata', f'{filename}.json')
+
+    if not os.path.exists(json_path):
+        raise Http404("JSON file not found")
+
+    try:
+        with open(json_path, 'r') as json_file:
+            data = json.load(json_file)
+    except json.JSONDecodeError:
+        raise Http404("Error decoding JSON file")
+
+    return JsonResponse(data)

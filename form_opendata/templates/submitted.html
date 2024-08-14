@@ -1,0 +1,16 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Metadata Submitted{% endblock %}
+
+{% block content %}
+<div class="container mt-5">
+    <h1>Metadata Submitted Successfully!</h1>
+    <p>Your metadata has been successfully captured and saved.</p>
+    <p>You can view or download the JSON file below:</p>
+    <ul>
+        <li><a href="{{ view_json_url }}" target="_blank">View JSON File (Formatted)</a></li>        
+    </ul>
+    <p><a href="{% url 'form_opendata' %}" class="btn btn-primary">Submit Another Entry</a></p>
+</div>
+{% endblock %}
