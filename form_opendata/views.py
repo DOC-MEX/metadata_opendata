@@ -15,10 +15,11 @@ def form_opendata(request):
     if request.method == 'POST':
         form = MetadataForm(request.POST)
         if form.is_valid():
-            authors = [author.strip() for author in form.cleaned_data['authors'].split(',')]
+            # Clean authors and project codes by removing empty items caused by double commas
+            authors = [author.strip() for author in form.cleaned_data['authors'].split(',') if author.strip()]
             project_name = form.cleaned_data['project_name']
             description = form.cleaned_data['description']
-            project_codes = [code.strip() for code in form.cleaned_data['project_codes'].split(',')]
+            project_codes = [code.strip() for code in form.cleaned_data['project_codes'].split(',') if code.strip()]
             project_uuid = str(uuid.uuid4())
             
             metadata = {
@@ -57,9 +58,9 @@ def review_metadata(request):
     if request.method == 'POST':
         form = MetadataForm(request.POST)
         if form.is_valid():
-            # Clean and strip whitespace from authors and project codes
-            cleaned_authors = [author.strip() for author in form.cleaned_data['authors'].split(',')]
-            cleaned_project_codes = [code.strip() for code in form.cleaned_data['project_codes'].split(',')]
+            # Clean and strip whitespace, and filter out empty items
+            cleaned_authors = [author.strip() for author in form.cleaned_data['authors'].split(',') if author.strip()]
+            cleaned_project_codes = [code.strip() for code in form.cleaned_data['project_codes'].split(',') if code.strip()]
 
             # Update the session with the cleaned data
             request.session['metadata'] = {
@@ -88,7 +89,7 @@ def submit_metadata(request):
     if not metadata:
         return redirect('form_opendata')
 
-     # Clean up any remaining whitespace in the session data
+    # Clean up any remaining whitespace in the session data
     metadata['authors'] = [author.strip() for author in metadata['authors']]
     metadata['project_codes'] = [code.strip() for code in metadata['project_codes']]
     
