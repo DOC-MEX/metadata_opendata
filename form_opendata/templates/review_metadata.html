@@ -25,26 +25,32 @@
             <tr>
                 <th>Project Name</th>
                 <td>
-                    <input type="text" name="project_name" id="id_project_name" class="form-control" value="{{ form.project_name.value }}">
+                    <input type="text" name="project_name" id="id_project_name" class="form-control" value="{{ form.project_name.value|default_if_none:'' }}">
                 </td>
             </tr>
             <tr>
                 <th>Authors</th>
                 <td>
-                    <textarea name="authors" id="id_authors" class="form-control" rows="3">{{ form.authors.value }}</textarea>
+                    <textarea name="authors" id="id_authors" class="form-control" rows="3">{{ form.authors.value|default_if_none:'' }}</textarea>
                     <small class="form-text text-muted">Enter authors separated by commas</small>
                 </td>
             </tr>
             <tr>
                 <th>Description</th>
                 <td>
-                    <textarea name="description" id="id_description" class="form-control" rows="5">{{ form.description.value }}</textarea>
+                    <textarea name="description" id="id_description" class="form-control" rows="5">{{ form.description.value|default_if_none:'' }}</textarea>
+                </td>
+            </tr>
+            <tr>
+                <th>URL Name</th>
+                <td>
+                    <input type="text" name="url_name" id="id_url_name" class="form-control" value="{{ form.url_name.value|default_if_none:'' }}">
                 </td>
             </tr>
             <tr>
                 <th>Project Codes</th>
                 <td>
-                    <textarea name="project_codes" id="id_project_codes" class="form-control" rows="3">{{ form.project_codes.value }}</textarea>
+                    <textarea name="project_codes" id="id_project_codes" class="form-control" rows="3">{{ form.project_codes.value|default_if_none:'' }}</textarea>
                     <small class="form-text text-muted">Enter project codes separated by commas</small>
                 </td>
             </tr>

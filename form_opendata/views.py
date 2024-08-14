@@ -20,21 +20,23 @@ def form_opendata(request):
             authors = [author.strip() for author in form.cleaned_data['authors'].split(',') if author.strip()]
             project_name = form.cleaned_data['project_name']
             description = form.cleaned_data['description']
+            url_name = form.cleaned_data['url_name']  # Capture URL Name
             project_codes = [code.strip() for code in form.cleaned_data['project_codes'].split(',') if code.strip()]
             project_uuid = str(uuid.uuid4())
-            
+
             metadata = {
                 "uuid": project_uuid,
                 "authors": authors,
                 "projectName": project_name,
                 "Description": description,
+                "url_name": url_name,  # Store URL Name in metadata
                 "license": {
                     "so:name": "toronto",
                     "so:url": "https://www.nature.com/articles/461168a#Sec2"
                 },
                 "project_codes": project_codes,
-                "so:url": f"https://opendata.earlham.ac.uk/wheat/under_license/toronto/{project_name}/",
-                "irods_path": f"/grassrootsZone/public/under_license/toronto/{project_name}",
+                "so:url": f"https://opendata.earlham.ac.uk/wheat/under_license/toronto/{url_name}/",
+                "irods_path": f"/grassrootsZone/public/under_license/toronto/{url_name}",
                 "@type": "Grassroots:Project",
                 "type_description": "Dataset",
                 "so:image": "https://grassroots.tools/grassroots/images/aiss/drawer"
@@ -63,13 +65,18 @@ def review_metadata(request):
             cleaned_authors = [author.strip() for author in form.cleaned_data['authors'].split(',') if author.strip()]
             cleaned_project_codes = [code.strip() for code in form.cleaned_data['project_codes'].split(',') if code.strip()]
             cleaned_description = form.cleaned_data['description'].replace('\r\n', ' ').replace('\n', ' ').strip()
+            url_name = form.cleaned_data['url_name'].strip()
 
             # Update the session with the cleaned data, keeping the original structure intact
             metadata.update({
                 'projectName': form.cleaned_data['project_name'],
+                'url_name': url_name,  # Update URL name in metadata
                 'authors': cleaned_authors,
                 'Description': cleaned_description,
                 'project_codes': cleaned_project_codes,
+                # Update the URLs with the new url_name value
+                'so:url': f"https://opendata.earlham.ac.uk/wheat/under_license/toronto/{url_name}/",
+                'irods_path': f"/grassrootsZone/public/under_license/toronto/{url_name}",
             })
 
             # Save the updated metadata back to the session
@@ -79,6 +86,7 @@ def review_metadata(request):
         # Prepopulate the form with current metadata
         form = MetadataForm(initial={
             'project_name': metadata.get('projectName', ''),
+            'url_name': metadata.get('url_name', ''),
             'authors': ', '.join(metadata.get('authors', [])),
             'description': metadata.get('Description', ''),
             'project_codes': ', '.join(metadata.get('project_codes', [])),
@@ -88,28 +96,37 @@ def review_metadata(request):
 
 
 
+
+
+
 def submit_metadata(request):
     metadata = request.session.get('metadata')
     if not metadata:
         return redirect('form_opendata')
 
+    # Clean up any remaining whitespace
     metadata['authors'] = [author.strip() for author in metadata['authors']]
     metadata['project_codes'] = [code.strip() for code in metadata['project_codes']]
     metadata['Description'] = metadata['Description'].replace('\r\n', ' ').replace('\n', ' ').strip()
 
+    # Remove the url_name from the final metadata
+    url_name = metadata.pop('url_name', None)
     project_name = metadata['projectName']
-    sanitized_project_name = project_name.replace(' ', '_')
+    sanitized_url_name = url_name.replace(' ', '_') if url_name else project_name.replace(' ', '_')
 
-    json_path = os.path.join(settings.BASE_DIR, 'form_opendata', f'{sanitized_project_name}.json')
+    # Save JSON file using url_name instead of project_name
+    json_path = os.path.join(settings.BASE_DIR, 'form_opendata', f'{sanitized_url_name}.json')
     with open(json_path, 'w') as json_file:
         json.dump(metadata, json_file, indent=4)
 
     del request.session['metadata']
 
-    json_url = os.path.join('/form_opendata', f'{sanitized_project_name}.json')
-    view_json_url = reverse('view_json', args=[sanitized_project_name])
+    json_url = os.path.join('/form_opendata', f'{sanitized_url_name}.json')
+    view_json_url = reverse('view_json', args=[sanitized_url_name])
 
     return render(request, 'submitted.html', {'json_url': json_url, 'view_json_url': view_json_url})
+
+
 
 def view_json(request, filename):
     # Construct the path to the JSON file

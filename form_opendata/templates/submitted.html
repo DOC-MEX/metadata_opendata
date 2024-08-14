@@ -3,11 +3,21 @@
 
 {% block title %}Metadata Submitted{% endblock %}
 
+{% block all_styles_and_scripts %}
+    {{ block.super }}
+    <style>
+        body {
+            padding-top: 110px;
+        }
+        
+    </style>
+{% endblock %}
+
 {% block content %}
 <div class="container mt-5">
     <h1>Metadata Submitted Successfully!</h1>
     <p>Your metadata has been successfully captured and saved.</p>
-    <p>You can view or download the JSON file below:</p>
+    <p>You can view the JSON file below:</p>
     <ul>
         <li><a href="{{ view_json_url }}" target="_blank">View JSON File (Formatted)</a></li>        
     </ul>
