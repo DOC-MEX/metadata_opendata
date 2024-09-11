@@ -140,13 +140,20 @@ def submit_metadata(request):
     sanitized_url_name = url_name.replace(' ', '_') if url_name else project_name.replace(' ', '_')
 
     # Save JSON file using url_name instead of project_name
-    json_path = os.path.join(settings.BASE_DIR, 'form_opendata', f'{sanitized_url_name}.json')
-    with open(json_path, 'w') as json_file:
+    json_output_path = os.path.join(settings.JSON_OUTPUT_DIR, f'{sanitized_url_name}.json')
+    
+    # Ensure the JSON_OUTPUT folder exists
+    if not os.path.exists(settings.JSON_OUTPUT_DIR):
+        os.makedirs(settings.JSON_OUTPUT_DIR)
+
+    # Save JSON file in the JSON_OUTPUT folder
+    with open(json_output_path, 'w') as json_file:
         json.dump(metadata, json_file, indent=4)
 
     del request.session['metadata']
 
-    json_url = os.path.join('/form_opendata', f'{sanitized_url_name}.json')
+    # Since the JSON_OUTPUT directory is not accessible via a direct URL, we'll use the 'serve_json_file' view to serve the file
+    json_url = reverse('serve_json_file', args=[sanitized_url_name])
     view_json_url = reverse('view_json', args=[sanitized_url_name])
 
     return render(request, 'submitted.html', {'json_url': json_url, 'view_json_url': view_json_url})
@@ -154,8 +161,8 @@ def submit_metadata(request):
 
 
 def view_json(request, filename):
-    # Construct the path to the JSON file
-    json_path = os.path.join(settings.BASE_DIR, 'form_opendata', f'{filename}.json')
+    # Construct the path to the JSON file in JSON_OUTPUT directory
+    json_path = os.path.join(settings.JSON_OUTPUT_DIR, f'{filename}.json')
     
     # Check if the file exists
     if not os.path.exists(json_path):
@@ -163,12 +170,12 @@ def view_json(request, filename):
 
     # Generate the URL to fetch the JSON using serve_json_file
     json_url = reverse('serve_json_file', args=[filename])
-    
+
     return render(request, 'view_json.html', {'json_url': json_url})
 
 
 def serve_json_file(request, filename):
-    json_path = os.path.join(settings.BASE_DIR, 'form_opendata', f'{filename}.json')
+    json_path = os.path.join(settings.JSON_OUTPUT_DIR, f'{filename}.json')
 
     if not os.path.exists(json_path):
         raise Http404("JSON file not found")
