@@ -24,6 +24,15 @@
         .submit-button {
             margin-bottom: 2rem; /* Add space below the submit button */
         }
+        .custom-fields-section {
+            margin-top: 20px;
+            margin-bottom: 20px; /* Add some space between the custom fields and the submit button */
+        }
+        .remove-field {
+            cursor: pointer;
+            color: red;
+            margin-left: 10px;
+        }
     </style>
 {% endblock %}
 
@@ -69,7 +78,36 @@
                 <div class="invalid-feedback">{{ error }}</div>
             {% endfor %}
         </div>
+
+       <!-- Custom Fields Section -->
+       <div class="custom-fields-section">
+        <h5>Additional Custom Fields</h5>
+        <div id="custom-fields-container"></div>
+        <button type="button" class="btn btn-secondary" id="add-custom-field-btn">Add Custom Field</button>
+       </div> 
+
         <button type="submit" class="btn btn-primary  submit-button">Submit</button>
     </form>
 </div>
+
+<script>
+    document.getElementById('add-custom-field-btn').addEventListener('click', function () {
+        const container = document.getElementById('custom-fields-container');
+        const fieldCount = container.children.length;
+
+        const newField = document.createElement('div');
+        newField.className = 'form-group';
+        newField.innerHTML = `
+            <label for="custom_field_${fieldCount}" class="form-label">Custom Field ${fieldCount + 1}</label>
+            <input type="text" name="custom_field_${fieldCount}" id="custom_field_${fieldCount}" class="form-control" placeholder="Enter field name">
+            <input type="text" name="custom_value_${fieldCount}" id="custom_value_${fieldCount}" class="form-control mt-2" placeholder="Enter field value">
+            <span class="remove-field" onclick="removeField(this)">Remove</span>
+        `;
+        container.appendChild(newField);
+    });
+
+    function removeField(element) {
+        element.parentElement.remove();
+    }
+</script>
 {% endblock %}

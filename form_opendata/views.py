@@ -42,8 +42,19 @@ def form_opendata(request):
                 "so:image": "https://grassroots.tools/grassroots/images/aiss/drawer"
             }
 
+            # Custom fields handling (not added to JSON yet)
+            custom_fields = {}
+            for key, value in request.POST.items():
+                if key.startswith('custom_field_') and value:
+                    field_num = key.split('_')[-1]
+                    custom_value_key = f'custom_value_{field_num}'
+                    if custom_value_key in request.POST:
+                        custom_fields[value] = request.POST[custom_value_key]
+
+
             # Save metadata to session for review
             request.session['metadata'] = metadata
+            request.session['custom_fields'] = custom_fields
 
             return redirect('review_metadata')
     else:
@@ -55,6 +66,8 @@ def form_opendata(request):
 
 def review_metadata(request):
     metadata = request.session.get('metadata')
+    custom_fields = request.session.get('custom_fields', {})
+    
     if not metadata:
         return redirect('form_opendata')
 
@@ -81,6 +94,17 @@ def review_metadata(request):
 
             # Save the updated metadata back to the session
             request.session['metadata'] = metadata
+
+            # Update custom fields in the session
+            custom_fields_updated = {}
+            for key, value in request.POST.items():
+                if key.startswith('custom_field_') and value:
+                    field_num = key.split('_')[-1]
+                    custom_value_key = f'custom_value_{field_num}'
+                    if custom_value_key in request.POST:
+                        custom_fields_updated[value] = request.POST[custom_value_key]
+            request.session['custom_fields'] = custom_fields_updated
+            
             return redirect('submit_metadata')
     else:
         # Prepopulate the form with current metadata
@@ -92,7 +116,8 @@ def review_metadata(request):
             'project_codes': ', '.join(metadata.get('project_codes', [])),
         })
 
-    return render(request, 'review_metadata.html', {'form': form})
+    return render(request, 'review_metadata.html', {'form': form, 'custom_fields': custom_fields})
+
 
 
 

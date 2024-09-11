@@ -13,6 +13,9 @@
         .submit-button {
             margin-bottom: 2rem; /* Add space below the submit button */
         }
+        .custom-field-name {
+            width: 60%; /* Adjust the width as needed */
+        }
     </style>
 {% endblock %}
 
@@ -54,6 +57,24 @@
                     <small class="form-text text-muted">Enter project codes separated by commas</small>
                 </td>
             </tr>
+             <!-- Custom fields: name on the left, value on the right, both editable -->
+             {% if custom_fields %}
+             <tr>
+                 <th colspan="2">Custom Fields</th>
+             </tr>
+             {% for field_name, field_value in custom_fields.items %}
+                 <tr>
+                     <th>
+                         <input type="text" name="custom_field_{{ forloop.counter }}" value="{{ field_name }}" class="form-control custom-field-name">
+                     </th>
+                     <td>
+                         <input type="text" name="custom_value_{{ forloop.counter }}" value="{{ field_value }}" class="form-control">
+                     </td>
+                 </tr>
+             {% endfor %}
+         {% endif %}
+
+
         </table>
         <button type="submit" class="btn btn-primary submit-button">Update Metadata</button>
     </form>
