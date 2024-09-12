@@ -126,6 +126,7 @@ def review_metadata(request):
 
 def submit_metadata(request):
     metadata = request.session.get('metadata')
+    custom_fields = request.session.get('custom_fields', {})
     if not metadata:
         return redirect('form_opendata')
 
@@ -139,6 +140,12 @@ def submit_metadata(request):
     project_name = metadata['projectName']
     sanitized_url_name = url_name.replace(' ', '_') if url_name else project_name.replace(' ', '_')
 
+    # Sanitize custom field names (replace spaces with underscores)
+    sanitized_custom_fields = {key.replace(' ', '_'): value for key, value in custom_fields.items()}
+
+    #merge custom fields into metadata
+    metadata.update(sanitized_custom_fields)
+
     # Save JSON file using url_name instead of project_name
     json_output_path = os.path.join(settings.JSON_OUTPUT_DIR, f'{sanitized_url_name}.json')
     
@@ -151,6 +158,7 @@ def submit_metadata(request):
         json.dump(metadata, json_file, indent=4)
 
     del request.session['metadata']
+    del request.session['custom_fields']
 
     # Since the JSON_OUTPUT directory is not accessible via a direct URL, we'll use the 'serve_json_file' view to serve the file
     json_url = reverse('serve_json_file', args=[sanitized_url_name])
