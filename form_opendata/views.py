@@ -157,6 +157,13 @@ def submit_metadata(request):
     with open(json_output_path, 'w') as json_file:
         json.dump(metadata, json_file, indent=4)
 
+    #generate and save the Python script to apply metadata to iRODS
+    python_script_output_path = os.path.join(settings.JSON_OUTPUT_DIR, f'{sanitized_url_name}_irods_script.py')
+    python_script_content = generate_irods_script(metadata)
+    with open(python_script_output_path, 'w') as python_script_file:
+        python_script_file.write(python_script_content)
+
+
     del request.session['metadata']
     del request.session['custom_fields']
 
@@ -195,3 +202,58 @@ def serve_json_file(request, filename):
         raise Http404("Error decoding JSON file")
 
     return JsonResponse(data)
+
+
+def generate_irods_script(metadata):
+    # Extract required fields from metadata
+    uuid = metadata['uuid']
+    authors = ', '.join(metadata['authors'])
+    description = metadata['Description']
+    license_name = metadata['license']['so:name'].capitalize()
+    license_url = metadata['license']['so:url']
+    project_name = metadata['projectName']
+    irods_path = metadata['irods_path']
+
+    # Generate the Python script content
+    script_content = f"""
+import json
+from irods.session import iRODSSession
+from irods.meta import iRODSMeta
+from irods.exception import CollectionDoesNotExist
+
+# iRODS connection parameters
+IRODS_HOST = 'opendata-dsw'
+IRODS_PORT = 1247
+IRODS_USER = 'grassroots'
+IRODS_PASS = '<removed>'
+IRODS_ZONE = 'grassrootsZone'
+
+# Target iRODS collection path
+target_collection_path = "{irods_path}"
+
+def apply_metadata(path, metadata, session):
+    # Extract and add the specific metadata attributes
+    attributes = [
+        ('authors', "{authors}"),
+        ('description', "{description}"),
+        ('license', "{license_name}"),
+        ('license_url', "{license_url}"),
+        ('projectName', "{project_name}"),
+        ('uuid', "{uuid}")
+    ]
+
+    try:
+        coll = session.collections.get(path)
+        for attribute, value in attributes:
+            if value:  # Only add metadata if the value is not empty
+                meta = iRODSMeta(attribute, value)
+                coll.metadata.add(meta)
+                print(f"Added metadata: {{attribute}} = {{value}}")
+    except CollectionDoesNotExist:
+        print(f"Collection does not exist: {{path}}")
+
+# Establish iRODS session
+with iRODSSession(host=IRODS_HOST, port=IRODS_PORT, user=IRODS_USER, password=IRODS_PASS, zone=IRODS_ZONE) as session:
+    apply_metadata(target_collection_path, metadata, session)
+    """
+    return script_content
