@@ -64,8 +64,20 @@
             {% endfor %}
         </div>
         <div class="form-group">
-            <label for="id_url_name" class="form-label">URL Name</label>
-            <input type="text" name="url_name" id="id_url_name" class="form-control{% if form.project_name.errors %} is-invalid{% endif %}" value="{{ form.url_name.value|default_if_none:'' }}">
+            <label for="id_url_name" class="form-label">
+                URL Name
+                <small class="text-muted" style="font-size: 0.9em;">(Usually a name, date and key words: <strong>Smith_2024_30_01_paragon_v1</strong>)</small>
+            </label>
+            <input type="text" name="url_name" id="id_url_name" 
+                   class="form-control{% if form.project_name.errors %} is-invalid{% endif %}" 
+                   value="{{ form.url_name.value|default_if_none:'' }}" autocomplete="off">
+        
+            <!-- Add an explanation below the input field -->
+            <small class="form-text text-muted">
+                The URL for your project will be: 
+                <span id="url_preview">https://opendata.earlham.ac.uk/wheat/under_license/toronto/<strong>&lt;URL_name&gt;</strong></span>
+            </small>
+        
             {% for error in form.url_name.errors %}
                 <div class="invalid-feedback">{{ error }}</div>
             {% endfor %}
@@ -109,5 +121,18 @@
     function removeField(element) {
         element.parentElement.remove();
     }
+</script>
+
+<script>
+    document.getElementById('id_url_name').addEventListener('input', function() {
+        var urlName = this.value.trim(); // Get the input value
+        var urlPreview = document.getElementById('url_preview');
+        
+        if (urlName) {
+            urlPreview.innerHTML = 'https://opendata.earlham.ac.uk/wheat/under_license/toronto/' + urlName;
+        } else {
+            urlPreview.innerHTML = 'https://opendata.earlham.ac.uk/wheat/under_license/toronto/<strong>&lt;URL_name&gt;</strong>';
+        }
+    });
 </script>
 {% endblock %}
